@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package sisp.identificacao_civil.v1;
+
+import "comum/v1/comum.proto";
+
+message DadosCidadao {
+  string numero_bi = 1;
+  string nome_completo = 2;
+  string data_nascimento = 3;
+  string sexo = 4;
+  string nacionalidade = 5;
+  string nome_pai = 6;
+  string nome_mae = 7;
+  string residencia = 8;
+}
+
+message Cidadao {
+  int64 id = 1;
+  string numero_bi = 2;
+  string nome_completo = 3;
+  string data_nascimento = 4;
+  string sexo = 5;
+  string nacionalidade = 6;
+  string nome_pai = 7;
+  string nome_mae = 8;
+  string residencia = 9;
+  string data_registo = 10;
+  string data_actualizacao = 11;
+}
+
+message PedidoSaude { sisp.comum.v1.ContextoPedido contexto = 1; }
+message RespostaSaude { string servico = 1; string estado = 2; }
+message PedidoRegistarCidadao { sisp.comum.v1.ContextoPedido contexto = 1; DadosCidadao cidadao = 2; }
+message PedidoObterCidadao { sisp.comum.v1.ContextoPedido contexto = 1; int64 cidadao_id = 2; }
+message PedidoProcurarCidadaoPorBi { sisp.comum.v1.ContextoPedido contexto = 1; string numero_bi = 2; }
+message PedidoListarCidadaos { sisp.comum.v1.ContextoPedido contexto = 1; int32 pagina = 2; int32 tamanho_pagina = 3; }
+message RespostaListarCidadaos {
+  repeated Cidadao itens = 1;
+  int32 pagina = 2;
+  int32 tamanho_pagina = 3;
+  int64 total = 4;
+  int32 total_paginas = 5;
+  string ultima_actualizacao = 6;
+}
+message PedidoActualizarCidadao { sisp.comum.v1.ContextoPedido contexto = 1; int64 cidadao_id = 2; DadosCidadao cidadao = 3; }
+message PedidoHistoricoCriminal {
+  sisp.comum.v1.ContextoPedido contexto = 1;
+  string numero_bi = 2;
+  int32 pagina = 3;
+  int32 tamanho_pagina = 4;
+}
+message ItemHistoricoCriminal {
+  int64 id = 1;
+  string numero_processo = 2;
+  string tipo_infracao = 3;
+  string descricao = 4;
+  string tribunal = 5;
+  string data_sentenca = 6;
+  string pena = 7;
+  string estado = 8;
+}
+message RespostaHistoricoCriminal {
+  string numero_bi = 1;
+  repeated ItemHistoricoCriminal itens = 2;
+  int32 pagina = 3;
+  int32 tamanho_pagina = 4;
+  int64 total = 5;
+  int32 total_paginas = 6;
+}
+
+service ServicoIdentificacaoCivil {
+  rpc VerificarSaude(PedidoSaude) returns (RespostaSaude);
+  rpc RegistarCidadao(PedidoRegistarCidadao) returns (Cidadao);
+  rpc ObterCidadao(PedidoObterCidadao) returns (Cidadao);
+  rpc ProcurarCidadaoPorBi(PedidoProcurarCidadaoPorBi) returns (Cidadao);
+  rpc ListarCidadaos(PedidoListarCidadaos) returns (RespostaListarCidadaos);
+  rpc ActualizarCidadao(PedidoActualizarCidadao) returns (Cidadao);
+  rpc ObterHistoricoCriminal(PedidoHistoricoCriminal) returns (RespostaHistoricoCriminal);
+}

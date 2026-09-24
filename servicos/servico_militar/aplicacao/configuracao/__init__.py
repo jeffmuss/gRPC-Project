@@ -1,0 +1,2 @@
+"""Configuracao do Servico Militar."""
+

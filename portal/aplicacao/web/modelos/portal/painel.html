@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Portal SISP{% endblock %}
+{% block classe_corpo %}pagina-inicial{% endblock %}
+{% block content %}
+<section class="apresentacao-portal">
+  <p class="selo-portal">Simulação de Plataforma Governamental</p>
+  <h1>Sistema de Interoperabilidade de Serviços Públicos <span>— SISP</span></h1>
+  <p>Seleccione o serviço público ao qual deseja aceder nesta sessão de trabalho.</p>
+</section>
+
+<section class="catalogo-servicos" aria-labelledby="titulo-servicos">
+  <h2 id="titulo-servicos">Serviços disponíveis</h2>
+  <div class="service-grid">
+  {% for service in servicos %}
+    <article class="servico-card cartao-{{ service.chave }} {% if not service.disponivel %}servico-muted{% endif %}">
+      <div class="servico-top">
+        <span class="servico-icon material-symbols-outlined" aria-hidden="true">{{ {'identificacao_civil':'badge','registo_criminal':'gavel','servico_militar':'shield'}[service.chave] }}</span>
+        <span class="status status-{{ service.estado }}"><i></i>{{ {'operacional':'Activo','planeado':'Planeado','indisponivel':'Indisponível'}[service.estado] }}</span>
+      </div>
+
+      <h3>{{ {'identificacao_civil':'Identificação Civil','registo_criminal':'Registo Criminal','servico_militar':'Serviço Militar'}[service.chave] }}</h3>
+      {% if not service.disponivel %}
+      <p class="descricao-servico aviso-indisponibilidade">{{ service.mensagem }}</p>
+      <h4>Estado do serviço</h4>
+      <ul class="lista-funcionalidades">
+        <li>O Portal permanece acessível</li>
+        <li>Os outros serviços continuam independentes</li>
+        <li>Tente novamente quando o serviço regressar</li>
+      </ul>
+      {% elif service.chave == 'identificacao_civil' %}
+      <p class="descricao-servico">Gestão do ciclo de vida da identidade civil, registo e consulta segura dos dados do cidadão.</p>
+      <h4>Funcionalidades do perfil</h4>
+      <ul class="lista-funcionalidades">
+        <li>Registar cidadão</li>
+        <li>Consultar dados de identificação</li>
+        <li class="funcionalidade-grpc"><span>Consultar antecedentes criminais</span><b class="etiqueta-grpc">gRPC</b></li>
+      </ul>
+      {% elif service.chave == 'registo_criminal' %}
+      <p class="descricao-servico">Registo e consulta do histórico criminal associado ao Bilhete de Identidade.</p>
+      <h4>Funcionalidades do perfil</h4>
+      <ul class="lista-funcionalidades">
+        <li>Registar antecedentes criminais</li>
+        <li>Consultar histórico criminal</li>
+        <li class="funcionalidade-grpc"><span>Validar identidade do cidadão</span><b class="etiqueta-grpc">gRPC</b></li>
+      </ul>
+      {% else %}
+      <p class="descricao-servico">Recenseamento militar e consulta interoperável da situação do cidadão.</p>
+      <h4>Funcionalidades do perfil</h4>
+      <ul class="lista-funcionalidades">
+        <li>Recenseamento militar</li>
+        <li>Consultar situação militar</li>
+        <li class="funcionalidade-grpc"><span>Validar identidade</span><b class="etiqueta-grpc">gRPC</b></li>
+        <li class="funcionalidade-grpc"><span>Consultar antecedentes criminais</span><b class="etiqueta-grpc">gRPC</b></li>
+      </ul>
+      {% endif %}
+
+      <div class="rodape-cartao">
+        {% if service.chave == 'identificacao_civil' and service.disponivel %}
+        <a class="button" href="{{ url_for('painel_identificacao_civil') }}"><span>Aceder à Identificação Civil</span><b class="material-symbols-outlined" aria-hidden="true">arrow_forward</b></a>
+        {% elif service.chave == 'registo_criminal' and service.disponivel %}
+        <a class="button" href="{{ url_for('painel_registo_criminal') }}"><span>Aceder ao Registo Criminal</span><b class="material-symbols-outlined" aria-hidden="true">arrow_forward</b></a>
+        {% elif service.chave == 'servico_militar' and service.disponivel %}
+        <a class="button" href="{{ url_for('painel_servico_militar') }}"><span>Aceder ao Serviço Militar</span><b class="material-symbols-outlined" aria-hidden="true">arrow_forward</b></a>
+        {% else %}
+        <span class="button button-disabled"><span>Temporariamente indisponível</span></span>
+        {% endif %}
+      </div>
+    </article>
+  {% endfor %}
+  </div>
+</section>
+{% endblock %}

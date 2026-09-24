@@ -1,0 +1,2 @@
+"""Configuracao do Registo Criminal."""
+

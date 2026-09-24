@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Processo {{ item.numero_processo }} | Portal SISP{% endblock %}
+{% block content %}
+<div class="breadcrumb"><a href="{{ url_for('painel_portal') }}">Servicos</a><span>/</span><a href="{{ url_for('painel_registo_criminal') }}">Registo Criminal</a><span>/</span><a href="{{ url_for('lista_registos_criminais') }}">Registos</a><span>/</span><span>{{ item.numero_processo }}</span></div>
+{% if saved %}<div class="alert alert-success">Registo criado com sucesso.</div>{% endif %}{% if updated %}<div class="alert alert-success">Registo actualizado com sucesso.</div>{% endif %}
+<div class="pagina-heading"><div><p class="eyebrow">Processo registo_criminal</p><h1>{{ item.numero_processo }}</h1><p>BI {{ item.numero_bi }}</p></div><a class="button" href="{{ url_for('editar_registo_criminal', registo_id=item.id) }}">Editar registo</a></div>
+<section class="panel details"><h2>Dados do registo</h2><dl><div><dt>Tipo de infraccao</dt><dd>{{ item.tipo_infracao }}</dd></div><div><dt>Estado</dt><dd>{{ item.estado }}</dd></div><div><dt>Tribunal</dt><dd>{{ item.tribunal }}</dd></div><div><dt>Data da sentenca</dt><dd>{{ item.data_sentenca.strftime('%d/%m/%Y') }}</dd></div><div><dt>Descricao</dt><dd>{{ item.descricao }}</dd></div><div><dt>Pena</dt><dd>{{ item.pena }}</dd></div></dl><p class="record-meta">Criado em {{ item.data_registo.strftime('%d/%m/%Y %H:%M') if item.data_registo else '-' }} · Sem operacao de eliminacao.</p></section>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Pesquisar BI | Portal SISP{% endblock %}
+{% block content %}
+<div class="breadcrumb"><a href="{{ url_for('painel_portal') }}">Servicos</a><span>/</span><a href="{{ url_for('painel_identificacao_civil') }}">Identificacao Civil</a><span>/</span><span>Pesquisa</span></div>
+<div class="pagina-heading"><div><p class="eyebrow">Consulta remota</p><h1>Pesquisar por BI</h1><p>O Portal encaminha a pesquisa por gRPC para a Identificacao Civil.</p></div></div>
+<section class="panel"><form class="search-form" method="get" action="{{ url_for('pesquisa_cidadaos') }}"><label for="numero_bi">Numero do Bilhete de Identidade</label><div class="search-row"><input id="numero_bi" name="numero_bi" value="{{ numero_bi }}" placeholder="Ex.: BI-DEMO-001" required><button class="button" type="submit">Pesquisar</button></div></form>{% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}{% if cidadao %}<article class="resultado-card"><div><span class="bi">{{ cidadao.numero_bi }}</span><h2>{{ cidadao.nome_completo }}</h2><p>{{ cidadao.nacionalidade }} · nascimento em {{ cidadao.data_nascimento.strftime('%d/%m/%Y') }}</p></div><a class="button button-secondary" href="{{ url_for('detalhe_cidadao', cidadao_id=cidadao.id) }}">Ver registo</a></article>{% endif %}</section>
+{% endblock %}

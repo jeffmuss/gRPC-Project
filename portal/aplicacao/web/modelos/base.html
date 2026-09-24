@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Portal SISP{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('estaticos', path='/estilo.css') }}?v=20260924-11">
+</head>
+<body class="{% block classe_corpo %}{% endblock %}">
+  <header class="site-header">
+    <div class="container header-content">
+      <a class="brand" href="{{ url_for('painel_portal') }}">
+        <span class="emblem" aria-hidden="true"><span></span></span>
+        <span><strong>Portal SISP</strong><small>{% if request.url.path.startswith('/identificacao') %}Identificação Civil{% elif request.url.path.startswith('/registo_criminal') %}Registo Criminal{% elif request.url.path.startswith('/servico_militar') %}Serviço Militar{% else %}Portal principal{% endif %}</small></span>
+      </a>
+      {% if request.url.path != '/' %}
+      <a class="botao-sair" href="{{ url_for('painel_portal') }}"><span class="material-symbols-outlined" aria-hidden="true">logout</span><span>Sair</span></a>
+      {% endif %}
+    </div>
+  </header>
+  <main class="container">{% block content %}{% endblock %}</main>
+  <footer class="site-footer"><div class="container"><div><strong>SISP</strong><span>• Sistema Integrado de Serviços Públicos</span></div><small>© 2026 Estudantes da UEM do curso de Eng. Informática 4º ano 5º grupo. Todos os direitos reservados.</small></div></footer>
+</body>
+</html>

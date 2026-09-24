@@ -1,0 +1,2 @@
+"""Contratos partilhados do SISP."""
+

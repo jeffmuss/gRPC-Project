@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Registo Criminal | Portal SISP{% endblock %}
+{% block classe_corpo %}pagina-registo-criminal{% endblock %}
+{% block content %}
+<section class="rc-contexto">
+  <div>
+    <div class="rc-breadcrumb"><span>SISP</span><span class="material-symbols-outlined">chevron_right</span><strong>Registo Criminal</strong><span class="material-symbols-outlined">chevron_right</span><span>Histórico criminal</span></div>
+    <h1>Serviço de Registo Criminal</h1>
+    <p>Registo e consulta local de antecedentes criminais.</p>
+  </div>
+  <span class="rc-ligacao"><i></i> Serviço operacional por gRPC</span>
+</section>
+
+<section class="rc-indicadores" aria-label="Indicadores do Registo Criminal">
+  <article class="rc-indicador">
+    <div><span>Registos criminais</span><b class="material-symbols-outlined">gavel</b></div>
+    <strong>{{ registos.total }}</strong>
+    <small>Total existente na base autónoma do Registo Criminal</small>
+  </article>
+  <article class="rc-indicador">
+    <div><span>Última actualização</span><b class="material-symbols-outlined">update</b></div>
+    <strong class="rc-data">{{ registos.ultima_actualizacao.strftime('%d/%m/%Y') if registos.ultima_actualizacao else 'Sem registos' }}</strong>
+    <small>{{ registos.ultima_actualizacao.strftime('%H:%M') if registos.ultima_actualizacao else 'Nenhuma actualização disponível' }}</small>
+  </article>
+</section>
+
+<section class="rc-accoes" aria-label="Operações do Registo Criminal">
+  <a class="rc-accao rc-accao-principal" href="{{ url_for('novo_registo_criminal') }}"><span class="material-symbols-outlined">add_circle</span><span><strong>Registar antecedentes</strong><small>Abrir o formulário de novo registo criminal</small></span><b class="material-symbols-outlined">arrow_forward</b></a>
+  <a class="rc-accao" href="{{ url_for('validacao_identidade_registo_criminal') }}"><span class="material-symbols-outlined">badge</span><span><strong>Validar identidade</strong><small>Consultar a Identificação Civil através de gRPC</small></span><b class="material-symbols-outlined">arrow_forward</b></a>
+</section>
+
+<section class="rc-historico">
+  <div class="rc-historico-topo">
+    <div class="rc-titulo-linha"><span class="material-symbols-outlined">manage_search</span><div><span>Directório criminal</span><h2>Histórico criminal</h2><p>Consulte os antecedentes existentes através do número de BI.</p></div></div>
+    <a href="{{ url_for('lista_registos_criminais') }}"><span class="material-symbols-outlined">visibility</span>Ver todos</a>
+  </div>
+
+  <form class="rc-pesquisa" action="{{ url_for('lista_registos_criminais') }}" method="get">
+    <label for="numero_bi">Número do Bilhete de Identidade</label>
+    <div><span class="material-symbols-outlined">search</span><input id="numero_bi" name="numero_bi" placeholder="Ex.: BI-DEMO-001"><button type="submit">Pesquisar histórico</button></div>
+  </form>
+
+  {% if registos.itens %}
+  <div class="table-wrap rc-tabela"><table><thead><tr><th>BI</th><th>N.º do processo</th><th>Estado</th><th>Infracção</th><th>Sentença</th><th>Acção</th></tr></thead><tbody>{% for item in registos.itens %}<tr><td><span class="bi">{{ item.numero_bi }}</span></td><td><strong>{{ item.numero_processo }}</strong></td><td><span class="rc-estado rc-estado-{{ item.estado|lower }}"><i></i>{{ item.estado }}</span></td><td>{{ item.tipo_infracao }}</td><td>{{ item.data_sentenca.strftime('%d/%m/%Y') }}</td><td><a class="rc-consultar" href="{{ url_for('detalhe_registo_criminal', registo_id=item.id) }}">Consultar</a></td></tr>{% endfor %}</tbody></table></div>
+  {% else %}
+  <div class="empty"><h3>Ainda não existem antecedentes registados</h3><p>Utilize o botão “Registar antecedentes” para criar o primeiro registo fictício.</p></div>
+  {% endif %}
+</section>
+{% endblock %}

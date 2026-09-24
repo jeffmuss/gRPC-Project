@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} | Portal SISP{% endblock %}
+{% block content %}
+<div class="breadcrumb"><a href="{{ url_for('painel_portal') }}">Servicos</a><span>/</span><a href="{{ url_for('painel_identificacao_civil') }}">Identificacao Civil</a><span>/</span><span>{{ title }}</span></div>
+<div class="pagina-heading"><div><p class="eyebrow">Gestao por gRPC</p><h1>{{ title }}</h1><p>Os campos assinalados com * sao obrigatorios.</p></div></div>
+<section class="panel form-panel">{% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}<form method="post" action="{{ action }}"><fieldset><legend>Dados de identificacao</legend><div class="form-grid">
+<div class="field"><label for="numero_bi">Numero de BI *</label><input id="numero_bi" name="numero_bi" maxlength="50" value="{{ values.get('numero_bi', '') }}" required></div>
+<div class="field field-wide"><label for="nome_completo">Nome completo *</label><input id="nome_completo" name="nome_completo" maxlength="200" value="{{ values.get('nome_completo', '') }}" required></div>
+<div class="field"><label for="data_nascimento">Data de nascimento *</label><input id="data_nascimento" name="data_nascimento" type="date" value="{{ values.get('data_nascimento', '') }}" required></div>
+<div class="field"><label for="sexo">Sexo *</label><select id="sexo" name="sexo" required><option value="">Seleccione</option>{% for value, label in sex_values %}<option value="{{ value }}" {% if values.get('sexo') == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+<div class="field"><label for="nacionalidade">Nacionalidade *</label><input id="nacionalidade" name="nacionalidade" maxlength="100" value="{{ values.get('nacionalidade', '') }}" required></div></div></fieldset>
+<fieldset><legend>Filiacao e residencia</legend><div class="form-grid"><div class="field"><label for="nome_pai">Nome do pai</label><input id="nome_pai" name="nome_pai" maxlength="200" value="{{ values.get('nome_pai', '') }}"></div><div class="field"><label for="nome_mae">Nome da mae</label><input id="nome_mae" name="nome_mae" maxlength="200" value="{{ values.get('nome_mae', '') }}"></div><div class="field field-wide"><label for="residencia">Residencia</label><textarea id="residencia" name="residencia" maxlength="300" rows="3">{{ values.get('residencia', '') }}</textarea></div></div></fieldset>
+<div class="form-actions"><a href="{{ url_for('lista_cidadaos') }}">Cancelar</a><button class="button" type="submit">{{ submit_label }}</button></div></form></section>
+{% endblock %}

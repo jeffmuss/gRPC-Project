@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Identificação Civil | Portal SISP{% endblock %}
+{% block classe_corpo %}pagina-identificacao{% endblock %}
+{% block content %}
+<section class="ic-contexto">
+  <div>
+    <div class="ic-breadcrumb"><span>SISP</span><span class="material-symbols-outlined">chevron_right</span><strong>Identificação Civil</strong></div>
+    <h1>Serviço de Identificação Civil</h1>
+    <p>Gestão dos dados fictícios de identificação dos cidadãos.</p>
+  </div>
+  <span class="ic-ligacao"><i></i> Serviço operacional por gRPC</span>
+</section>
+
+<section class="ic-indicadores" aria-label="Indicadores do serviço">
+  <article class="ic-indicador">
+    <div class="ic-indicador-topo"><span>Cidadãos registados</span><b class="material-symbols-outlined">badge</b></div>
+    <strong>{{ resultado.total }}</strong>
+    <small>Total existente na base autónoma da Identificação Civil</small>
+  </article>
+  <article class="ic-indicador">
+    <div class="ic-indicador-topo"><span>Última actualização</span><b class="material-symbols-outlined">update</b></div>
+    <strong class="ic-data">{{ resultado.ultima_actualizacao.strftime('%d/%m/%Y') if resultado.ultima_actualizacao else 'Sem registos' }}</strong>
+    <small>{{ resultado.ultima_actualizacao.strftime('%H:%M') if resultado.ultima_actualizacao else 'Nenhuma actualização disponível' }}</small>
+  </article>
+</section>
+
+<section class="ic-funcoes">
+  <article class="ic-registo-card">
+    <div>
+      <div class="ic-card-rotulo"><span class="material-symbols-outlined">person_add</span><strong>Procedimento de registo</strong><em>Fluxo guiado</em></div>
+      <h2>Registar cidadão</h2>
+      <p>Criar um novo registo civil com os dados permitidos pelo projecto e um número de BI único.</p>
+      <ol class="ic-passos">
+        <li><span>1</span><div><strong>Dados pessoais</strong><small>Nome, nascimento, sexo e nacionalidade</small></div></li>
+        <li><span>2</span><div><strong>Filiação</strong><small>Nome do pai e nome da mãe</small></div></li>
+        <li><span>3</span><div><strong>Residência</strong><small>Morada habitual fictícia do cidadão</small></div></li>
+      </ol>
+    </div>
+    <a class="ic-botao ic-botao-escuro" href="{{ url_for('novo_cidadao') }}"><span class="material-symbols-outlined">add_circle</span>Iniciar novo registo civil</a>
+  </article>
+
+  <div class="ic-coluna-consultas">
+    <article class="ic-consulta-card">
+      <div class="ic-titulo-linha"><span class="material-symbols-outlined">manage_search</span><div><h2>Consultar dados de identificação</h2><p>Pesquisa directa e segura pelo número do Bilhete de Identidade.</p></div></div>
+      <form action="{{ url_for('pesquisa_cidadaos') }}" method="get" class="ic-pesquisa">
+        <label for="numero_bi">Número de BI</label>
+        <div><span class="material-symbols-outlined">search</span><input id="numero_bi" name="numero_bi" placeholder="Ex.: BI-DEMO-001" required><button type="submit">Consultar</button></div>
+      </form>
+    </article>
+
+    <section class="ic-recentes">
+  <div class="ic-seccao-topo"><div><span>Directório civil</span><h2>Cidadãos registados recentemente</h2></div><a href="{{ url_for('lista_cidadaos') }}"><span class="material-symbols-outlined">visibility</span>Ver todos</a></div>
+  {% if resultado.itens %}
+  <div class="table-wrap"><table><thead><tr><th>Cidadão</th><th>BI</th><th>Nascimento</th><th>Nacionalidade</th><th>Acções</th></tr></thead><tbody>{% for cidadao in resultado.itens %}<tr><td><strong>{{ cidadao.nome_completo }}</strong></td><td><span class="bi">{{ cidadao.numero_bi }}</span></td><td>{{ cidadao.data_nascimento.strftime('%d/%m/%Y') }}</td><td>{{ cidadao.nacionalidade }}</td><td class="actions"><a href="{{ url_for('detalhe_cidadao', cidadao_id=cidadao.id) }}">Consultar</a><a href="{{ url_for('historico_criminal_cidadao', cidadao_id=cidadao.id) }}">Antecedentes</a></td></tr>{% endfor %}</tbody></table></div>
+  {% else %}
+  <div class="empty"><h3>Ainda não existem cidadãos registados</h3><p>Comece por criar o primeiro registo civil fictício.</p></div>
+  {% endif %}
+    </section>
+  </div>
+</section>
+{% endblock %}

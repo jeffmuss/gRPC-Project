@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package sisp.servico_militar.v1;
+
+import "comum/v1/comum.proto";
+
+message PedidoSaude { sisp.comum.v1.ContextoPedido contexto = 1; }
+message RespostaSaude { string servico = 1; string estado = 2; }
+
+message DadosRecenseamentoMilitar {
+  string numero_bi = 1;
+  string numero_recenseamento = 2;
+  string data_recenseamento = 3;
+  string distrito = 4;
+  string posto_recenseamento = 5;
+  string ramo = 6;
+  string situacao = 7;
+  string observacoes = 8;
+}
+
+message RecenseamentoMilitar {
+  int64 id = 1;
+  string numero_bi = 2;
+  string numero_recenseamento = 3;
+  string data_recenseamento = 4;
+  string distrito = 5;
+  string posto_recenseamento = 6;
+  string ramo = 7;
+  string situacao = 8;
+  string observacoes = 9;
+  string data_registo = 10;
+  string data_actualizacao = 11;
+}
+
+message PedidoCriarRecenseamento { sisp.comum.v1.ContextoPedido contexto = 1; DadosRecenseamentoMilitar recenseamento = 2; }
+message PedidoObterRecenseamento { sisp.comum.v1.ContextoPedido contexto = 1; int64 recenseamento_id = 2; }
+message PedidoConsultarSituacao { sisp.comum.v1.ContextoPedido contexto = 1; string numero_bi = 2; }
+message PedidoListarRecenseamentos { sisp.comum.v1.ContextoPedido contexto = 1; int32 pagina = 2; int32 tamanho_pagina = 3; string numero_bi = 4; }
+message RespostaListarRecenseamentos {
+  repeated RecenseamentoMilitar itens = 1;
+  int32 pagina = 2;
+  int32 tamanho_pagina = 3;
+  int64 total = 4;
+  int32 total_paginas = 5;
+  string ultima_actualizacao = 6;
+}
+message PedidoActualizarRecenseamento { sisp.comum.v1.ContextoPedido contexto = 1; int64 recenseamento_id = 2; DadosRecenseamentoMilitar recenseamento = 3; }
+
+message PedidoValidarIdentidade { sisp.comum.v1.ContextoPedido contexto = 1; string numero_bi = 2; }
+message ValidacaoIdentidade {
+  bool existe = 1;
+  string numero_bi = 2;
+  string nome_completo = 3;
+  string data_nascimento = 4;
+  string nacionalidade = 5;
+}
+
+message PedidoConsultarAntecedentes { sisp.comum.v1.ContextoPedido contexto = 1; string numero_bi = 2; int32 pagina = 3; int32 tamanho_pagina = 4; }
+message AntecedenteCriminal {
+  int64 id = 1;
+  string numero_processo = 2;
+  string tipo_infracao = 3;
+  string descricao = 4;
+  string tribunal = 5;
+  string data_sentenca = 6;
+  string pena = 7;
+  string estado = 8;
+}
+message RespostaAntecedentes {
+  string numero_bi = 1;
+  repeated AntecedenteCriminal itens = 2;
+  int32 pagina = 3;
+  int32 tamanho_pagina = 4;
+  int64 total = 5;
+  int32 total_paginas = 6;
+}
+
+service ServicoMilitar {
+  rpc VerificarSaude(PedidoSaude) returns (RespostaSaude);
+  rpc CriarRecenseamento(PedidoCriarRecenseamento) returns (RecenseamentoMilitar);
+  rpc ObterRecenseamento(PedidoObterRecenseamento) returns (RecenseamentoMilitar);
+  rpc ConsultarSituacao(PedidoConsultarSituacao) returns (RecenseamentoMilitar);
+  rpc ListarRecenseamentos(PedidoListarRecenseamentos) returns (RespostaListarRecenseamentos);
+  rpc ActualizarRecenseamento(PedidoActualizarRecenseamento) returns (RecenseamentoMilitar);
+  rpc ValidarIdentidade(PedidoValidarIdentidade) returns (ValidacaoIdentidade);
+  rpc ConsultarAntecedentes(PedidoConsultarAntecedentes) returns (RespostaAntecedentes);
+}

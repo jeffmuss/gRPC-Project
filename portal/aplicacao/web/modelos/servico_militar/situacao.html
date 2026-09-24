@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Consultar situação militar | Portal SISP{% endblock %}
+{% block content %}
+<div class="breadcrumb"><a href="{{ url_for('painel_portal') }}">Serviços</a><span>/</span><a href="{{ url_for('painel_servico_militar') }}">Serviço Militar</a><span>/</span><span>Consultar situação</span></div>
+<div class="pagina-heading"><div><p class="eyebrow">Consulta local</p><h1>Consultar situação militar</h1><p>Pesquisa efectuada apenas na base de dados do Serviço Militar.</p></div></div>
+<section class="panel"><form class="search-form" method="get"><label for="numero_bi">Número do Bilhete de Identidade</label><div class="search-row"><input id="numero_bi" name="numero_bi" value="{{ numero_bi }}" placeholder="Ex.: BI-DEMO-001" required><button class="button" type="submit">Consultar</button></div></form>{% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}{% if resultado %}<article class="resultado-card"><div><span class="bi">{{ resultado.numero_bi }}</span><h2>{{ resultado.numero_recenseamento }}</h2><p>{{ resultado.distrito }} · {{ resultado.ramo }} · recenseado em {{ resultado.data_recenseamento.strftime('%d/%m/%Y') }}</p></div><span class="status status-operacional">{{ resultado.situacao }}</span></article>{% endif %}</section>
+{% endblock %}

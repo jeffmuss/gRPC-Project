@@ -1,0 +1,2 @@
+"""Testes do Registo Criminal."""
+

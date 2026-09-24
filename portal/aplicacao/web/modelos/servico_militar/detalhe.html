@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}{{ item.numero_recenseamento }} | Portal SISP{% endblock %}
+{% block content %}
+<div class="breadcrumb"><a href="{{ url_for('painel_portal') }}">Serviços</a><span>/</span><a href="{{ url_for('painel_servico_militar') }}">Serviço Militar</a><span>/</span><a href="{{ url_for('lista_recenseamentos_militares') }}">Recenseamentos</a><span>/</span><span>{{ item.numero_recenseamento }}</span></div>
+{% if saved %}<div class="alert alert-success">Recenseamento criado com sucesso.</div>{% endif %}{% if updated %}<div class="alert alert-success">Recenseamento actualizado com sucesso.</div>{% endif %}
+<div class="pagina-heading"><div><p class="eyebrow">Situação militar</p><h1>{{ item.numero_recenseamento }}</h1><p>BI <span class="bi">{{ item.numero_bi }}</span></p></div><a class="button" href="{{ url_for('editar_recenseamento_militar', item_id=item.id) }}">Editar registo</a></div>
+<section class="panel"><div class="detail-grid"><div><span>Data de recenseamento</span><strong>{{ item.data_recenseamento.strftime('%d/%m/%Y') }}</strong></div><div><span>Situação</span><strong>{{ item.situacao }}</strong></div><div><span>Distrito</span><strong>{{ item.distrito }}</strong></div><div><span>Posto</span><strong>{{ item.posto_recenseamento }}</strong></div><div><span>Ramo</span><strong>{{ item.ramo }}</strong></div><div><span>Observações</span><strong>{{ item.observacoes or 'Sem observações' }}</strong></div></div></section>
+{% endblock %}

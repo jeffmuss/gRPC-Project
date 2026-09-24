@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package sisp.comum.v1;
+
+message ContextoPedido {
+  string id_pedido = 1;
+  string servico_chamador = 2;
+  string finalidade = 3;
+}
+
+message ResultadoOperacao {
+  bool sucesso = 1;
+  string mensagem = 2;
+}

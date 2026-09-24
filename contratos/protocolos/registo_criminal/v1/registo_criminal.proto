@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package sisp.registo_criminal.v1;
+
+import "comum/v1/comum.proto";
+
+message PedidoSaude { sisp.comum.v1.ContextoPedido contexto = 1; }
+message RespostaSaude { string servico = 1; string estado = 2; }
+message DadosRegistoCriminal {
+  string numero_bi = 1;
+  string numero_processo = 2;
+  string tipo_infracao = 3;
+  string descricao = 4;
+  string tribunal = 5;
+  string data_sentenca = 6;
+  string pena = 7;
+  string estado = 8;
+}
+message RegistoCriminal {
+  int64 id = 1;
+  string numero_bi = 2;
+  string numero_processo = 3;
+  string tipo_infracao = 4;
+  string descricao = 5;
+  string tribunal = 6;
+  string data_sentenca = 7;
+  string pena = 8;
+  string estado = 9;
+  string data_registo = 10;
+  string data_actualizacao = 11;
+}
+message PedidoCriarRegisto { sisp.comum.v1.ContextoPedido contexto = 1; DadosRegistoCriminal registo = 2; }
+message PedidoObterRegisto { sisp.comum.v1.ContextoPedido contexto = 1; int64 registo_id = 2; }
+message PedidoListarRegistos { sisp.comum.v1.ContextoPedido contexto = 1; int32 pagina = 2; int32 tamanho_pagina = 3; string numero_bi = 4; }
+message RespostaListarRegistos { repeated RegistoCriminal itens = 1; int32 pagina = 2; int32 tamanho_pagina = 3; int64 total = 4; int32 total_paginas = 5; string ultima_actualizacao = 6; }
+message PedidoActualizarRegisto { sisp.comum.v1.ContextoPedido contexto = 1; int64 registo_id = 2; DadosRegistoCriminal registo = 3; }
+message PedidoValidarIdentidade { sisp.comum.v1.ContextoPedido contexto = 1; string numero_bi = 2; }
+message ValidacaoIdentidade {
+  bool existe = 1;
+  string numero_bi = 2;
+  string nome_completo = 3;
+  string data_nascimento = 4;
+  string nacionalidade = 5;
+}
+
+service ServicoRegistoCriminal {
+  rpc VerificarSaude(PedidoSaude) returns (RespostaSaude);
+  rpc CriarRegisto(PedidoCriarRegisto) returns (RegistoCriminal);
+  rpc ObterRegisto(PedidoObterRegisto) returns (RegistoCriminal);
+  rpc ListarRegistos(PedidoListarRegistos) returns (RespostaListarRegistos);
+  rpc ActualizarRegisto(PedidoActualizarRegisto) returns (RegistoCriminal);
+  rpc ValidarIdentidade(PedidoValidarIdentidade) returns (ValidacaoIdentidade);
+}

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Serviço Militar | Portal SISP{% endblock %}
+{% block classe_corpo %}pagina-servico-militar{% endblock %}
+{% block content %}
+<section class="sm-contexto">
+  <div>
+    <div class="sm-breadcrumb">
+      <span>SISP</span>
+      <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+      <strong>Serviço Militar</strong>
+    </div>
+    <h1>Serviço Militar</h1>
+    <p>Recenseamento e consulta da situação militar, com validação interoperável de identidade e antecedentes criminais.</p>
+  </div>
+  <span class="sm-autonomia"><i></i> Base de dados própria</span>
+</section>
+
+<section class="sm-indicadores" aria-label="Resumo do Serviço Militar">
+  <article class="sm-indicador">
+    <div>
+      <span>Recenseamentos registados</span>
+      <b class="material-symbols-outlined" aria-hidden="true">military_tech</b>
+    </div>
+    <strong>{{ resultado.total }}</strong>
+    <small>Total existente no Serviço Militar</small>
+  </article>
+  <article class="sm-indicador">
+    <div>
+      <span>Histórico apresentado</span>
+      <b class="material-symbols-outlined" aria-hidden="true">history</b>
+    </div>
+    <strong>{{ resultado.itens|length }}</strong>
+    <small>Registos militares mais recentes</small>
+  </article>
+</section>
+
+<section class="sm-accoes" aria-label="Operações do Serviço Militar">
+  <a class="sm-accao sm-accao-principal" href="{{ url_for('novo_recenseamento_militar') }}">
+    <span class="material-symbols-outlined" aria-hidden="true">person_add</span>
+    <span><strong>Recensear cidadão</strong><small>Criar um novo recenseamento militar</small></span>
+    <b class="material-symbols-outlined" aria-hidden="true">arrow_forward</b>
+  </a>
+  <a class="sm-accao" href="{{ url_for('validar_identidade_servico_militar') }}">
+    <span class="material-symbols-outlined" aria-hidden="true">badge</span>
+    <span><strong>Validar identidade</strong><small>Consultar a Identificação Civil por gRPC</small></span>
+    <b class="material-symbols-outlined" aria-hidden="true">arrow_forward</b>
+  </a>
+  <a class="sm-accao" href="{{ url_for('consultar_antecedentes_servico_militar') }}">
+    <span class="material-symbols-outlined" aria-hidden="true">gavel</span>
+    <span><strong>Consultar antecedentes</strong><small>Consultar o Registo Criminal por gRPC</small></span>
+    <b class="material-symbols-outlined" aria-hidden="true">arrow_forward</b>
+  </a>
+</section>
+
+<section class="sm-historico">
+  <div class="sm-historico-topo">
+    <div class="sm-titulo-linha">
+      <span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
+      <div>
+        <span>Situação militar</span>
+        <h2>Histórico de recenseamentos militares</h2>
+        <p>Registos existentes na base de dados própria do Serviço Militar.</p>
+      </div>
+    </div>
+    <a href="{{ url_for('lista_recenseamentos_militares') }}">
+      <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+      <span>Ver todos</span>
+    </a>
+  </div>
+
+  {% if resultado.itens %}
+  <div class="table-wrap sm-tabela">
+    <table>
+      <thead>
+        <tr>
+          <th>Recenseamento</th>
+          <th>Número de BI</th>
+          <th>Data</th>
+          <th>Distrito / posto</th>
+          <th>Ramo</th>
+          <th>Situação</th>
+          <th>Acções</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in resultado.itens %}
+        <tr>
+          <td><strong>{{ item.numero_recenseamento }}</strong></td>
+          <td><span class="bi">{{ item.numero_bi }}</span></td>
+          <td>{{ item.data_recenseamento.strftime('%d/%m/%Y') }}</td>
+          <td><strong>{{ item.distrito }}</strong><small>{{ item.posto_recenseamento }}</small></td>
+          <td>{{ item.ramo }}</td>
+          <td><span class="sm-estado"><i></i>{{ item.situacao }}</span></td>
+          <td class="sm-accoes-registo">
+            <a href="{{ url_for('detalhe_recenseamento_militar', item_id=item.id) }}">Consultar</a>
+            <a href="{{ url_for('editar_recenseamento_militar', item_id=item.id) }}">Editar</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">
+    <h2>Nenhum recenseamento encontrado</h2>
+    <p>Utilize a opção “Recensear cidadão” para criar o primeiro registo.</p>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
