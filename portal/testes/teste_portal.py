@@ -101,3 +101,32 @@ def test_other_modules_remain_visible_when_identificacao_civil_is_down() -> None
             assert "Serviço Militar" in response.text
     finally:
         aplicacao.dependency_overrides.clear()
+
+
+def test_registo_criminal_keeps_functionalities_visible_when_down() -> None:
+    class OnlineLigacaoIdentificacaoCivil:
+        def saude(self):
+            return EstadoServico("identificacao_civil", "Identificação Civil", "operacional", True, "Serviço operacional")
+
+    class OfflineLigacaoRegistoCriminal:
+        def saude(self):
+            raise ServicoIndisponivel("Registo Criminal indisponível")
+
+    class OnlineLigacaoServicoMilitar:
+        def saude(self):
+            return EstadoServico("servico_militar", "Serviço Militar", "operacional", True, "Serviço operacional")
+
+    aplicacao.dependency_overrides[obter_ligacao_identificacao_civil] = lambda: OnlineLigacaoIdentificacaoCivil()
+    aplicacao.dependency_overrides[obter_ligacao_registo_criminal] = lambda: OfflineLigacaoRegistoCriminal()
+    aplicacao.dependency_overrides[obter_ligacao_servico_militar] = lambda: OnlineLigacaoServicoMilitar()
+    try:
+        with TestClient(aplicacao) as client:
+            response = client.get("/")
+            assert response.status_code == 200
+            assert "Registar antecedentes criminais" in response.text
+            assert "Consultar histórico criminal" in response.text
+            assert "Validar identidade do cidadão" in response.text
+            assert "etiqueta-grpc" in response.text
+            assert "Estado do serviço" not in response.text
+    finally:
+        aplicacao.dependency_overrides.clear()

@@ -19,7 +19,15 @@
       </div>
 
       <h3>{{ {'identificacao_civil':'Identificação Civil','registo_criminal':'Registo Criminal','servico_militar':'Serviço Militar'}[service.chave] }}</h3>
-      {% if not service.disponivel %}
+      {% if service.chave == 'registo_criminal' %}
+      <p class="descricao-servico">Registo e consulta do histórico criminal associado ao Bilhete de Identidade.</p>
+      <h4>Funcionalidades do perfil</h4>
+      <ul class="lista-funcionalidades">
+        <li>Registar antecedentes criminais</li>
+        <li>Consultar histórico criminal</li>
+        <li class="funcionalidade-grpc"><span>Validar identidade do cidadão</span><b class="etiqueta-grpc">gRPC</b></li>
+      </ul>
+      {% elif not service.disponivel %}
       <p class="descricao-servico aviso-indisponibilidade">{{ service.mensagem }}</p>
       <h4>Estado do serviço</h4>
       <ul class="lista-funcionalidades">
@@ -34,14 +42,6 @@
         <li>Registar cidadão</li>
         <li>Consultar dados de identificação</li>
         <li class="funcionalidade-grpc"><span>Consultar antecedentes criminais</span><b class="etiqueta-grpc">gRPC</b></li>
-      </ul>
-      {% elif service.chave == 'registo_criminal' %}
-      <p class="descricao-servico">Registo e consulta do histórico criminal associado ao Bilhete de Identidade.</p>
-      <h4>Funcionalidades do perfil</h4>
-      <ul class="lista-funcionalidades">
-        <li>Registar antecedentes criminais</li>
-        <li>Consultar histórico criminal</li>
-        <li class="funcionalidade-grpc"><span>Validar identidade do cidadão</span><b class="etiqueta-grpc">gRPC</b></li>
       </ul>
       {% else %}
       <p class="descricao-servico">Recenseamento militar e consulta interoperável da situação do cidadão.</p>
