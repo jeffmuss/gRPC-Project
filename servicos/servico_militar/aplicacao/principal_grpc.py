@@ -7,6 +7,7 @@ from .infraestrutura.grpc import criar_servidor
 
 
 def principal() -> None:
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     endereco = f"{definicoes.anfitriao_grpc}:{definicoes.porta_grpc}"
     servidor, _ = criar_servidor(endereco)
     servidor.start()
