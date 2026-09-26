@@ -347,6 +347,7 @@ Premir Ctrl + C em cada terminal, nesta ordem:
 
 | Sintoma | Verificar |
 |---|---|
+| `'.' is not recognized` ou `The system cannot find the path specified` | Está no CMD, não no PowerShell. Escrever `powershell` e repetir, ou usar `.venv\Scripts\python.exe` com barras invertidas |
 | `python` dá erro de `encodings` | Está a usar o Python do MySQL Shell. Usar `./.venv/Scripts/python.exe` |
 | Serviço aparece indisponível | O terminal do serviço está aberto? O IP no `portal/.env` está correcto? |
 | `TcpTestSucceeded : False` | Rede Privada, regra de firewall, mesma rede, rede da faculdade a isolar computadores (usar hotspot) |
